@@ -1,0 +1,101 @@
+<nz-layout>
+  <nz-page-header>
+    <nz-page-header-title>School</nz-page-header-title>
+    <nz-page-header-subtitle>Demo</nz-page-header-subtitle>
+  </nz-page-header>
+
+  <nz-content>
+    <div class="inner-content">
+      <div nz-row>
+        <div nz-col nzSpan="22" nzOffset="1">
+          <nz-table #basicTable
+            nzBordered
+            [nzData]="allEnrollment"
+            [nzShowPagination]="false" [nzNoResult]="'No data yet'"
+          >
+            <thead>
+              <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>NRIC</th>
+                <th>Course Name</th>
+                <th>Enrollment Year</th>
+                <th>Score</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of allEnrollment">
+                <td>{{data.id}} {{data.student.firstName}}</td>
+                <td>{{data.student.lastName}}</td>
+                <td>{{data.student.nric}}</td>
+                <td>{{data.course.courseName}}</td>
+                <td>{{data.yearTaken}}</td>
+                <td>{{data.score}}</td>
+                <td class="editable-row-operations">
+                  <!-- <button nz-button nzType="primary" nzDanger>
+                    <i nz-icon nzType="delete" nzTheme="fill"></i> Delete</button> -->
+                  
+                  <ng-container *ngIf="!editCache[data.id]?.edit; else saveTpl">
+                    <a (click)="startEdit(data.id)">Edit</a>
+                  </ng-container>
+                  
+                  <ng-template #saveTpl>
+                    <a (click)="saveEdit(data.id)">Save</a>
+                    <a nz-popconfirm nzTitle="Sure to cancel?" (nzOnConfirm)="cancelEdit(data.id)">Cancel</a>
+                  </ng-template>  
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+          
+          <!-- <nz-table #basicTable [nzData]="allStudents">
+            <thead>
+              <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Mobile</th>
+                <th>NRIC</th>
+                <th>Gender</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of allStudents">
+                <td>{{data.firstName}}</td>
+                <td>{{data.lastName}}</td>
+                <td>{{data.mobile}}</td>
+                <td>{{data.nric}}</td>
+                <td>{{data.gender}}</td>
+                <td>
+                  <a>Delete</a>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table> -->
+          
+          <!-- <nz-table #basicTable [nzData]="allCourses">
+            <thead>
+              <tr>
+                <th>Course Name</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of allCourses">
+                <td>{{data.courseName}}</td>
+                <td>
+                  <a>Action 一 {{data.courseName}}</a>
+                  <nz-divider nzType="vertical"></nz-divider>
+                  <a>Delete</a>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table> -->
+        </div>
+      </div>
+    </div>
+  </nz-content>
+
+  <nz-footer>©2022 AJ</nz-footer>
+</nz-layout>
+
