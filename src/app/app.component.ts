@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, FormArray, FormControl, Validators } from '@ang
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { Observable } from 'rxjs';
-import { Enroll } from './model/enroll.model';
+import { Course, Enroll, Student } from './model/enroll.model';
 import { CourseService } from './service/course.service';
 import { EnrollService } from './service/enroll.service';
 import { StudentService } from './service/student.service';
@@ -27,14 +27,16 @@ export class AppComponent {
   enrollUpdate: any = [];
   isOkLoading = false;
 
+  students$!: Observable<Student[]>;
+  courses$!: Observable<Course[]>;
 
   //enroll$!: Observable<Enroll[]>;
 
   //enrollForm!: FormGroup;
 
   constructor(
-    // private studentSvc: StudentService,
-    // private courseSvc: CourseService,
+    private studentSvc: StudentService,
+    private courseSvc: CourseService,
     private enrollSvc: EnrollService,
     private nzMessageService: NzMessageService,
     public fb: FormBuilder,
@@ -42,11 +44,18 @@ export class AppComponent {
   ) { }
 
   enrollForm = new FormGroup({
-    student_id: new FormControl(''),
-    course_id: new FormControl(''),
-    yearTaken: new FormControl(''),
-    score: new FormControl(''),
-  })  
+    student_id: new FormControl(),
+    course_id: new FormControl(),
+    yearTaken: new FormControl(),
+    score: new FormControl(),
+  })
+
+  // studentList(e : any) {
+  //   this.students$ = this.studentSvc.findAll();
+  
+  //   console.log(this.students$);
+  //   return this.students$;
+  // }
 
   findAll() {
     this.enrollSvc
@@ -110,6 +119,9 @@ export class AppComponent {
   ngOnInit(): void {
     // this.students();
     // this.courses();
+    this.students$ = this.studentSvc.findAll();
+    this.courses$ = this.courseSvc.findAll();
+  
     this.findAll();
   }
 

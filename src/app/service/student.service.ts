@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse ,HttpHeaders } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
+import { Course, Student } from '../model/enroll.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StudentService {
 
-  private url = 'http://localhost:8080/api/v1/students';
+  private baseUrl = 'http://localhost:8080/api/v1/students';
   
   constructor(private http: HttpClient) { }
 
@@ -19,7 +20,15 @@ export class StudentService {
     })
   }
 
-  find(): Observable<any> {
-    return this.http.get(this.url);
+  // find(): Observable<any> {
+  //   return this.http.get(this.baseUrl);
+  // }
+
+  findAll(): Observable<Student[]> {
+    return this.http.get<Student[]>(this.baseUrl);
+
+    // return this.http
+    //   .get(this.baseUrl)
+    //   .pipe<Student[]>(map((data: any) => data));
   }
 }

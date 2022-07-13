@@ -17,17 +17,37 @@
         <div class="container custom-container">
           <div class="col-md-12">
             
-            <nz-form-item>
-              <nz-form-label [nzSpan]="6" nzFor="limit">Student Id</nz-form-label>
+            <!-- <nz-form-item>
+              <nz-form-label [nzSpan]="6" nzFor="student_id">Student Id</nz-form-label>
               <nz-form-control [nzSpan]="14">
                 <input nz-input formControlName="student_id" class="form-control">
               </nz-form-control>
-            </nz-form-item>
+            </nz-form-item> -->
 
             <nz-form-item>
+              <nz-form-label [nzSpan]="6" nzFor="student_id">Student</nz-form-label>
+              <nz-form-control [nzSpan]="14">
+                <select formControlName="student_id">
+                  <option disabled>Select student</option>
+                  <option [ngValue]="student.id" *ngFor="let student of students$ | async">{{student.firstName}} {{student.lastName}}</option>
+                </select>
+              </nz-form-control>
+            </nz-form-item>
+
+            <!-- <nz-form-item>
               <nz-form-label [nzSpan]="6" nzFor="limit">Course Id</nz-form-label>
               <nz-form-control [nzSpan]="14">
                 <input nz-input formControlName="course_id" class="form-control">
+              </nz-form-control>
+            </nz-form-item> -->
+
+            <nz-form-item>
+              <nz-form-label [nzSpan]="6" nzFor="course_id">Course</nz-form-label>
+              <nz-form-control [nzSpan]="14">
+                <select formControlName="course_id">
+                  <option disabled>Select course</option>
+                  <option [ngValue]="course.id" *ngFor="let course of courses$ | async">{{course.courseName}}</option>
+                </select>
               </nz-form-control>
             </nz-form-item>
 

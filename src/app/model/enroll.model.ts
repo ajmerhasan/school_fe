@@ -19,6 +19,7 @@ export class Student {
         public updatedAt?: Date,
         public updatedBy?: string,
         public firstName?: string,
+        public lastName?: string,
         public mobile?: string,
         public nric?: string,
         public gender?: string,
