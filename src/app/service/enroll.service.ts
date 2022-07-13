@@ -35,11 +35,8 @@ export class EnrollService {
   create(payload: any) {
     this.httpOptions = {
       headers: new HttpHeaders({
-        // 'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        // 'Access-Control-Allow-Credentials': 'true',
-        ////'Authorization': 'Bearer ahWYmFWT8pCqbfqx6FA9cBrQoFNf8w'
       })
     }  
 
