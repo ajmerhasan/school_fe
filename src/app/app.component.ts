@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { Enroll } from './model/Enroll';
+import { Observable } from 'rxjs';
+import { Enroll } from './model/enroll.model';
 import { CourseService } from './service/course.service';
 import { EnrollService } from './service/enroll.service';
 import { StudentService } from './service/student.service';
@@ -13,12 +14,17 @@ import { StudentService } from './service/student.service';
 export class AppComponent {
   title = 'school-fe';
 
-  editCache: { [key: string]: any } = {};
+  size: 'small' | 'middle' | 'large' | number = 'small';
+
+  editCache: { [key: string]: { edit: boolean; data: Enroll } } = {};
+  //listOfData: Enroll[] = [];
 
   // allStudents: any = [];
   // allCourses: any = [];
-  // allEnrollment: any = [];
-  allEnrollment: any[] = [];
+  allEnrollment: any = [];
+  enrollUpdate: any = [];
+
+  enroll$!: Observable<Enroll[]>;
 
   constructor(
     // private studentSvc: StudentService,
@@ -27,70 +33,85 @@ export class AppComponent {
     private nzMessageService: NzMessageService,
   ) { }
 
-  startEdit(id: string): void {
-    this.editCache[id].edit = true;
-  }
-
-  cancelEdit(id: string): void {
-    const index = this.allEnrollment.findIndex(item => item.id === id);
-    this.editCache[id] = {
-      data: { ...this.allEnrollment[index] },
-      edit: false
-    };
-  }
-
-  saveEdit(id: string): void {
-    const index = this.allEnrollment.findIndex(item => item.id === id);
-    Object.assign(this.allEnrollment[index], this.editCache[id].data);
-    this.editCache[id].edit = false;
-  }
-
-  updateEditCache(): void {
-    this.allEnrollment.forEach(item => {
-      this.editCache[item.id] = {
-        edit: false,
-        data: { ...item }
-      };
-    });
-  }
-
-  readAll(): void {
+  findAll() {
     this.enrollSvc
         .findAll()
         .subscribe((response: any) => {
-          console.log(response);
+          //console.log(response);
+          //this.allEnrollment.data = response;
           this.allEnrollment = response;
-        })
+        });
+  }
 
-    this.allEnrollment.forEach(item => {
-      this.editCache[item.id] = {
-        edit: false,
-        data: { ...item }
-      };
-    });
+  find(id: number) {
+    this.enrollSvc
+        .find(id)
+        .subscribe(() => {
+          this.allEnrollment = this.enrollSvc.find(id);
+        });
+  }
+
+  delete(enroll: Enroll){
+    this.enrollSvc.delete(enroll.id)
+      .subscribe(() => {
+        this.allEnrollment = this.enrollSvc.findAll();
+      });
+    this.nzMessageService.info('Unenrolled successfully');
+    
+  }
+
+  update(enroll: Enroll) {
+    const data = {
+      "yearTaken": enroll.yearTaken,
+      "score": enroll.score
+    }
+
+    //console.log(data);
+    this.enrollSvc.update(enroll.id!, data).subscribe();
+    this.nzMessageService.info('Updated successfully');
+  }
+
+  cancel(): void {
+    this.nzMessageService.info('Abort deletion');
   }
 
   ngOnInit(): void {
     // this.students();
     // this.courses();
-    this.readAll();
+    this.findAll();
   }
 
-  // students(): void {
-  //   this.studentSvc
-  //       .find()
-  //       .subscribe((response: any) => {
-  //         console.log(response);
-  //         this.allStudents = response;
-  //       })
+  // startEdit(id: string): void {
+  //   this.editCache[id].edit = true;
   // }
 
-  // courses(): void {
-  //   this.courseSvc
-  //       .find()
-  //       .subscribe((response: any) => {
-  //         console.log(response);
-  //         this.allCourses = response;
-  //       })
+  // cancelEdit(id: number): void {
+  //   const index = this.listOfData.findIndex(item => item.id === id);
+  //   this.editCache[id] = {
+  //     data: { ...this.listOfData[index] },
+  //     edit: false
+  //   };
+  // }
+
+  // saveEdit(id: number): void {
+  //   const index = this.listOfData.findIndex(item => item.id === id);
+  //   Object.assign(this.listOfData[index], this.editCache[id].data);
+  //   this.editCache[id].edit = false;
+  // }
+
+  // updateEditCache(): void {
+  //   this.listOfData.forEach(item => {
+  //     this.editCache[item.id!] = {
+  //       edit: false,
+  //       data: { ...item }
+  //     };
+  //   });
+
+  //   console.log(this.listOfData);
+  // }
+
+  // ngOnInit(): void {
+  //   this.readAll();
+  //   this.updateEditCache();
   // }
 }

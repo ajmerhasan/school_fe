@@ -4,14 +4,20 @@
     <nz-page-header-subtitle>Demo</nz-page-header-subtitle>
   </nz-page-header>
 
+  <!-- <div>
+    <pre>{{ allEnrollment | json }}</pre>
+  </div> -->
+
   <nz-content>
     <div class="inner-content">
       <div nz-row>
         <div nz-col nzSpan="22" nzOffset="1">
-          <nz-table #basicTable
+          <!-- <button nz-button (click)="addRow()" nzType="primary">Add</button> -->
+          <nz-table #editRowTable
             nzBordered
             [nzData]="allEnrollment"
-            [nzShowPagination]="false" [nzNoResult]="'No data yet'"
+            [nzShowPagination]="false"
+            [nzNoResult]="'No data yet'"
           >
             <thead>
               <tr>
@@ -25,25 +31,32 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let data of allEnrollment">
-                <td>{{data.id}} {{data.student.firstName}}</td>
+              <tr *ngFor="let data of allEnrollment" class="editable-row">
+                <td>{{data.student.firstName}}</td>
                 <td>{{data.student.lastName}}</td>
                 <td>{{data.student.nric}}</td>
                 <td>{{data.course.courseName}}</td>
-                <td>{{data.yearTaken}}</td>
-                <td>{{data.score}}</td>
-                <td class="editable-row-operations">
-                  <!-- <button nz-button nzType="primary" nzDanger>
-                    <i nz-icon nzType="delete" nzTheme="fill"></i> Delete</button> -->
+                <td><input nz-input type="text" [(ngModel)]="data.yearTaken" /></td>
+                <!-- <td>{{data.yearTaken}}</td> -->
+                <td><input nz-input type="text" [(ngModel)]="data.score" /></td>
+                <!-- <td>{{data.score}}</td> -->
+                <td class="editable-row-operations" >
+                  <button nz-button nzType="primary" nzShape="circle"
+                    (click)=update(data)>
+                    <i nz-icon nzType="edit" nzTheme="fill"></i> 
+                  </button>
                   
-                  <ng-container *ngIf="!editCache[data.id]?.edit; else saveTpl">
-                    <a (click)="startEdit(data.id)">Edit</a>
-                  </ng-container>
+                  &nbsp;&nbsp;&nbsp;
+                  <button nz-button nzType="primary" nzShape="circle" nzDanger
+                    nz-popconfirm
+                    nzPopconfirmTitle="Are you sure you want to delete"
+                    nzPopconfirmPlacement="top"
+                    (nzOnConfirm)=delete(data)
+                    (nzOnCancel)="cancel()">
+                    <i nz-icon nzType="delete" nzTheme="fill"></i> 
+                  </button>  
                   
-                  <ng-template #saveTpl>
-                    <a (click)="saveEdit(data.id)">Save</a>
-                    <a nz-popconfirm nzTitle="Sure to cancel?" (nzOnConfirm)="cancelEdit(data.id)">Cancel</a>
-                  </ng-template>  
+                    
                 </td>
               </tr>
             </tbody>
