@@ -8,10 +8,61 @@
     <pre>{{ allEnrollment | json }}</pre>
   </div> -->
 
+  <nz-modal [(nzVisible)]="isVisible"
+    (nzOnCancel)="handleCancel()" 
+    (nzOnOk)="handleOk()">
+    <ng-container *nzModalContent>
+      <form nz-form [formGroup]="enrollForm" *ngIf="enrollForm" (ngSubmit)="onSubmit()">
+              
+        <div class="container custom-container">
+          <div class="col-md-12">
+            
+            <nz-form-item>
+              <nz-form-label [nzSpan]="6" nzFor="limit">Student Id</nz-form-label>
+              <nz-form-control [nzSpan]="14">
+                <input nz-input formControlName="student_id" class="form-control">
+              </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+              <nz-form-label [nzSpan]="6" nzFor="limit">Course Id</nz-form-label>
+              <nz-form-control [nzSpan]="14">
+                <input nz-input formControlName="course_id" class="form-control">
+              </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+              <nz-form-label [nzSpan]="6" nzFor="limit">Enroll Year</nz-form-label>
+              <nz-form-control [nzSpan]="14">
+                <input nz-input formControlName="yearTaken" class="form-control">
+              </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+              <nz-form-label [nzSpan]="6" nzFor="limit">Score</nz-form-label>
+              <nz-form-control [nzSpan]="14">
+                <input nz-input formControlName="score" class="form-control">
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+
+        <button type="submit" nz-button nzType="primary"><i nz-icon nzType="send" nzTheme="outline"></i> Enroll </button>
+
+      </form>
+    </ng-container>
+  </nz-modal>
+
   <nz-content>
     <div class="inner-content">
       <div nz-row>
         <div nz-col nzSpan="22" nzOffset="1">
+          <button nz-button nzType="primary" nzShape="circle"
+            (click)="showModal()">
+            <i nz-icon nzType="plus" nzTheme="outline"></i>
+          </button>
+          <br><br>
+
           <!-- <button nz-button (click)="addRow()" nzType="primary">Add</button> -->
           <nz-table #editRowTable
             nzBordered

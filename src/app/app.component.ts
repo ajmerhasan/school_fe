@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
+import { FormGroup, FormBuilder, FormArray, FormControl, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalService } from 'ng-zorro-antd/modal';
 import { Observable } from 'rxjs';
 import { Enroll } from './model/enroll.model';
 import { CourseService } from './service/course.service';
@@ -16,22 +18,35 @@ export class AppComponent {
 
   size: 'small' | 'middle' | 'large' | number = 'small';
 
-  editCache: { [key: string]: { edit: boolean; data: Enroll } } = {};
+  //editCache: { [key: string]: { edit: boolean; data: Enroll } } = {};
   //listOfData: Enroll[] = [];
 
   // allStudents: any = [];
   // allCourses: any = [];
   allEnrollment: any = [];
   enrollUpdate: any = [];
+  isOkLoading = false;
 
-  enroll$!: Observable<Enroll[]>;
+
+  //enroll$!: Observable<Enroll[]>;
+
+  //enrollForm!: FormGroup;
 
   constructor(
     // private studentSvc: StudentService,
     // private courseSvc: CourseService,
     private enrollSvc: EnrollService,
     private nzMessageService: NzMessageService,
+    public fb: FormBuilder,
+    private modalService: NzModalService,
   ) { }
+
+  enrollForm = new FormGroup({
+    student_id: new FormControl(''),
+    course_id: new FormControl(''),
+    yearTaken: new FormControl(''),
+    score: new FormControl(''),
+  })  
 
   findAll() {
     this.enrollSvc
@@ -52,10 +67,12 @@ export class AppComponent {
   }
 
   delete(enroll: Enroll){
-    this.enrollSvc.delete(enroll.id)
-      .subscribe(() => {
-        this.allEnrollment = this.enrollSvc.findAll();
-      });
+    // this.enrollSvc.delete(enroll.id)
+    //   .subscribe(() => {
+    //     this.allEnrollment = this.enrollSvc.findAll();
+    //   });
+
+    this.enrollSvc.delete(enroll.id).subscribe();  
     this.nzMessageService.info('Unenrolled successfully');
     
   }
@@ -71,6 +88,21 @@ export class AppComponent {
     this.nzMessageService.info('Updated successfully');
   }
 
+  create(enroll: Enroll) {
+    // const data = {
+    //   "yearTaken": enroll.yearTaken,
+    //   "score": enroll.score
+    // }
+
+    //console.log(data);
+    //this.enrollSvc.create(enroll).subscribe();
+    this.enrollSvc.create(enroll);
+
+    this.handleOk();
+
+    this.nzMessageService.info('Updated successfully');
+  }
+
   cancel(): void {
     this.nzMessageService.info('Abort deletion');
   }
@@ -81,37 +113,25 @@ export class AppComponent {
     this.findAll();
   }
 
-  // startEdit(id: string): void {
-  //   this.editCache[id].edit = true;
-  // }
+  onSubmit() {
+    // console.log("payload ", this.enrollForm.value)
+    // alert(JSON.stringify(this.enrollForm.value, undefined, 2)) 
 
-  // cancelEdit(id: number): void {
-  //   const index = this.listOfData.findIndex(item => item.id === id);
-  //   this.editCache[id] = {
-  //     data: { ...this.listOfData[index] },
-  //     edit: false
-  //   };
-  // }
+    this.enrollSvc.create(this.enrollForm.value);
+  }
 
-  // saveEdit(id: number): void {
-  //   const index = this.listOfData.findIndex(item => item.id === id);
-  //   Object.assign(this.listOfData[index], this.editCache[id].data);
-  //   this.editCache[id].edit = false;
-  // }
+  isVisible = false;
 
-  // updateEditCache(): void {
-  //   this.listOfData.forEach(item => {
-  //     this.editCache[item.id!] = {
-  //       edit: false,
-  //       data: { ...item }
-  //     };
-  //   });
+  showModal(): void {
+    this.isVisible = true;
+  }
 
-  //   console.log(this.listOfData);
-  // }
+  handleOk(): void {
+    // console.log('Button ok clicked!');
+    this.isVisible = false;
+  }
 
-  // ngOnInit(): void {
-  //   this.readAll();
-  //   this.updateEditCache();
-  // }
+  handleCancel(): void {
+    this.isVisible = false;
+  }
 }
